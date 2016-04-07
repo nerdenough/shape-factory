@@ -1,8 +1,10 @@
 Game.Play = function () {};
 
 var shape;
-var particles;
+var baseSquare;
 var emitter;
+var score;
+var labelScore;
 
 var velX;
 var spacebar;
@@ -12,8 +14,17 @@ Game.Play.prototype.create = function () {
   velX = 200;
   chooseShape();
 
+  baseSquare = game.add.sprite(200, game.world.height, 'base-square');
+  baseSquare.anchor.setTo(1);
+  game.physics.arcade.enable(baseSquare);
+
   game.physics.startSystem(Phaser.Physics.ARCADE);
   spacebar = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
+  score = 0;
+  labelScore = game.add.text(20, 20, score, {
+    font: '30px Arial', fill: '#000000'
+  });
 };
 
 Game.Play.prototype.update = function () {
@@ -37,7 +48,15 @@ Game.Play.prototype.update = function () {
     released = false;
     chooseShape();
   }
+
+  game.physics.arcade.overlap(shape, baseSquare, hitBase, null, this);
 };
+
+function hitBase() {
+  score++;
+  labelScore.setText(score);
+  shape.alive = false;
+}
 
 function chooseShape () {
   var i = game.rnd.integerInRange(0, 2);

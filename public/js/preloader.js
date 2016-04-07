@@ -13,6 +13,8 @@ Game.Preloader.prototype.create = function () {
   game.load.image('shape-1', 'assets/circle.png');
   game.load.image('shape-2', 'assets/triangle.png');
 
+  game.load.image('base-square', 'assets/base-square.png');
+
   game.load.image('particles-0', 'assets/particles-square.png');
   game.load.image('particles-1', 'assets/particles-circle.png');
   game.load.image('particles-2', 'assets/particles-triangle.png');
