@@ -15,6 +15,7 @@ Game.Play.prototype.create = function () {
   chooseShape();
 
   baseSquare = game.add.sprite(200, game.world.height, 'base-square');
+  baseSquare.id = 0;
   baseSquare.anchor.setTo(1);
   game.physics.arcade.enable(baseSquare);
 
@@ -53,9 +54,11 @@ Game.Play.prototype.update = function () {
 };
 
 function hitBase() {
-  score++;
-  labelScore.setText(score);
-  shape.alive = false;
+  if (shape.id === baseSquare.id) {
+    score++;
+    labelScore.setText(score);
+    shape.alive = false;
+  }
 }
 
 function chooseShape () {
@@ -67,6 +70,7 @@ function chooseShape () {
   shape.body.velocity.x = velX;
   shape.checkWorldBounds = true;
   shape.outOfBoundsKill = true;
+  shape.id = i;
 
   emitter = game.add.emitter(0, 0, 100);
   emitter.gravity = 100;
