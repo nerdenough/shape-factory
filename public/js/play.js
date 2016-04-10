@@ -3,7 +3,9 @@ Game.Play = function () {};
 var shape;
 var baseSquare;
 var emitter;
+var lives;
 var score;
+var labelLives;
 var labelScore;
 
 var velX;
@@ -22,10 +24,15 @@ Game.Play.prototype.create = function () {
   game.physics.startSystem(Phaser.Physics.ARCADE);
   spacebar = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
+  lives = 3;
   score = 0;
-  labelScore = game.add.text(20, 20, score, {
+  labelScore = game.add.text(20, 20, 'Score: ' + score, {
     font: '30px Arial', fill: '#000000'
   });
+  labelLives = game.add.text(game.world.width - 20, 20, 'Lives: ' + lives, {
+    font: '30px Arial', fill: '#000000'
+  });
+  labelLives.anchor.setTo(1, 0);
 };
 
 Game.Play.prototype.update = function () {
@@ -50,15 +57,30 @@ Game.Play.prototype.update = function () {
     chooseShape();
   }
 
+  if (lives === 0) {
+    gameOver();
+  }
+
   game.physics.arcade.overlap(shape, baseSquare, hitBase, null, this);
 };
 
 function hitBase() {
   if (shape.id === baseSquare.id) {
     score++;
-    labelScore.setText(score);
-    shape.alive = false;
+    labelScore.setText('Score: ' + score);
+  } else {
+    lives--;
+    labelLives.setText('Lives: ' + lives);
   }
+  shape.alive = false;
+}
+
+function gameOver() {
+  score = 0;
+  lives = 3;
+  labelScore.setText('Score: ' + score);
+  labelLives.setText('Lives: ' + lives);
+  chooseShape();
 }
 
 function chooseShape () {
@@ -81,5 +103,5 @@ function particleBurst () {
   emitter.x = shape.body.x + shape.body.width / 2;
   emitter.y = shape.body.y + shape.body.height / 2;
 
-  emitter.start(true, 2000, null, 100);
+  emitter.start(true, 10000, null, 100);
 }
