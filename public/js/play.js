@@ -7,6 +7,7 @@ var lives;
 var score;
 var labelLives;
 var labelScore;
+var safe;
 
 var velX;
 var spacebar;
@@ -14,6 +15,7 @@ var released;
 
 Game.Play.prototype.create = function () {
   velX = 200;
+  safe = false;
   chooseShape();
 
   baseSquare = game.add.sprite(200, game.world.height, 'base-square');
@@ -53,6 +55,11 @@ Game.Play.prototype.update = function () {
   }
 
   if (!shape.alive) {
+    if (!safe) {
+      lives--;
+      labelLives.setText('Lives: ' + lives);
+    }
+    safe = false;
     released = false;
     chooseShape();
   }
@@ -67,10 +74,8 @@ Game.Play.prototype.update = function () {
 function hitBase() {
   if (shape.id === baseSquare.id) {
     score++;
+    safe = true;
     labelScore.setText('Score: ' + score);
-  } else {
-    lives--;
-    labelLives.setText('Lives: ' + lives);
   }
   shape.alive = false;
 }
@@ -80,7 +85,6 @@ function gameOver() {
   lives = 3;
   labelScore.setText('Score: ' + score);
   labelLives.setText('Lives: ' + lives);
-  chooseShape();
 }
 
 function chooseShape () {
